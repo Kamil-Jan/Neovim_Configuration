@@ -1,15 +1,16 @@
 call plug#begin('C:/.vim/plugged')
 "=====================================================
-" Plugins 
+" Plugins
 "=====================================================
 Plug 'preservim/nerdtree'                        " file navigation
-Plug 'preservim/nerdcommenter'                   " autocommenting
+Plug 'preservim/nerdcommenter'                   " auto commenting
 Plug 'nathanaelkane/vim-indent-guides'           " show indents
 Plug 'jiangmiao/auto-pairs'                      " auto pairs for '('
-Plug 'neoclide/coc.nvim', {'branch': 'release'}  " intellisense
+Plug 'neoclide/coc.nvim', {'branch': 'release'}  " intelligence
+"Plug 'tmhedberg/SimpylFold'                      " folding
 " Themes
 Plug 'justinmk/molokai'
-Plug 'joshdick/onedark.vim'
+Plug 'morhetz/gruvbox'
 " Status line
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -28,11 +29,16 @@ set belloff=all
 set splitright
 set splitbelow
 
-colorscheme molokai
-let g:airline_theme='molokai'
-let g:airline#extensions#tabline#enabled = 1
+" scheme settings
+colorscheme gruvbox
+let g:airline_theme='gruvbox'
 
+" encoding settings
 set encoding=utf-8
+
+" spelling settings
+set spelllang=en_us
+set spell
 
 " hide panels
 set guioptions-=T   " toolbar
@@ -41,25 +47,19 @@ set guioptions-=L   " left scrollbar
 set guioptions-=m   " menu
 let g:onedark_hide_endofbuffer = 1
 
+" left column settings
 set nu
 set ruler
 set relativenumber
 
 " cwd the same as current file directory
 set autochdir
-
 " vim-run settings
 let g:run_cmd_python = ['python']
-
 " enable indent guides by default
 let g:indent_guides_enable_on_vim_startup = 1
-
 " close vim if only nerd tree is left
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-" autocommenting setting
-nnoremap <C-/> :call NERDComment(0,"toggle")<CR>
-vnoremap <C-/> :call NERDComment(0,"toggle")<CR>
 
 "=====================================================
 " Python settings
@@ -75,7 +75,7 @@ let python_highlight_all=1
 syntax on
 
 "=====================================================
-" User hotkeys
+" User hot keys
 "=====================================================
 inoremap jk <esc>
 inoremap kj <esc>
@@ -87,29 +87,37 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
 " resize windows
-nnoremap <M-j> :resize -2<CR>
-nnoremap <M-k> :resize +2<CR>
-nnoremap <M-l> :vertical resize -2<CR>
-nnoremap <M-h> :vertical resize +2<CR>
+nnoremap <silent> <M-j> :resize -2<CR>
+nnoremap <silent> <M-k> :resize +2<CR>
+nnoremap <silent> <M-l> :vertical resize -2<CR>
+nnoremap <silent> <M-h> :vertical resize +2<CR>
+
+" moving lines
+xnoremap <silent> K :move '<-2<CR>gv-gv
+xnoremap <silent> J :move '<+1<CR>gv-gv
 
 " tab navigations
-nnoremap <C-TAB> :bnext<CR>
-nnoremap <S-TAB> :bprevious<CR>
+nnoremap <silent> <C-TAB> :bnext<CR>
+nnoremap <silent> <S-TAB> :bprevious<CR>
 
-" todo perations
-nnoremap \t /# TODO:<CR>
-nnoremap \T ?# TODO:<CR>
-nnoremap d\t :s/# TODO:/#<CR>
+" TODO operations
+nnoremap <silent> \t /# TODO:<CR>
+nnoremap <silent> \T ?# TODO:<CR>
+nnoremap <silent> d\t :s/# TODO:/#<CR>
 
 " copy and paste to/from clipboard
 noremap <leader>y "*y
 noremap <leader>p "*p
-nnoremap P A <esc>p
+nnoremap <silent> P A <esc>p
 
 " delete text from line
-nnoremap <space>d ^d$
+nnoremap <silent> <space>d ^d$
 " rename the current word
 nmap <F2> <Plug>(coc-rename)
+
+" auto commenting setting
+nnoremap <silent> <C-/> :call NERDComment(0,"toggle")<CR>
+vnoremap <silent> <C-/> :call NERDComment(0,"toggle")<CR>
 
 " run python code using <C-R>
 nnoremap <F9> :w <CR> :sp <CR> :term python % <CR>
