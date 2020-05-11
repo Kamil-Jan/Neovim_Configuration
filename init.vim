@@ -2,28 +2,36 @@ call plug#begin('C:/.vim/plugged')
 "=====================================================
 " Plugins
 "=====================================================
-Plug 'preservim/nerdtree'                        " file navigation
-Plug 'preservim/nerdcommenter'                   " auto commenting
-Plug 'nathanaelkane/vim-indent-guides'           " show indents
-Plug 'jiangmiao/auto-pairs'                      " auto pairs for '('
-Plug 'neoclide/coc.nvim', {'branch': 'release'}  " intelligence
-"Plug 'tmhedberg/SimpylFold'                      " folding
+" File navigation
+    Plug 'preservim/nerdtree'
+    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+    Plug 'junegunn/fzf.vim'
 " Themes
-Plug 'justinmk/molokai'
-Plug 'morhetz/gruvbox'
+    Plug 'morhetz/gruvbox'
 " Status line
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+" Other
+    Plug 'preservim/nerdcommenter'                   " auto commenting
+    Plug 'nathanaelkane/vim-indent-guides'           " show indents
+    Plug 'jiangmiao/auto-pairs'                      " auto pairs for '('
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}  " intelligence
+    Plug 'tmhedberg/SimpylFold'                      " folding
+    Plug 'haya14busa/is.vim'                         " improves search feature
+    Plug 'unblevable/quick-scope'
 
 call plug#end()            " required
-filetype plugin indent on    " required
+filetype plugin indent on  " required
 
 "=====================================================
 " General settings
 "=====================================================
-" turn off visual effects 
+" turn off visual effects
 set visualbell t_vd=
 set belloff=all
+
+" fast scrolling
+set scrolljump=5
 
 " split settings
 set splitright
@@ -52,14 +60,21 @@ set nu
 set ruler
 set relativenumber
 
+" change font of AutoComplete menu
+au VimEnter * GuiPopupmenu 0
+
 " cwd the same as current file directory
 set autochdir
+cd $HOME/Desktop
+
 " vim-run settings
 let g:run_cmd_python = ['python']
 " enable indent guides by default
 let g:indent_guides_enable_on_vim_startup = 1
 " close vim if only nerd tree is left
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" delete all trailing whitespaces on save
+autocmd BufWritePre * %s/\s\+$//e
 
 "=====================================================
 " Python settings
@@ -79,6 +94,13 @@ syntax on
 "=====================================================
 inoremap jk <esc>
 inoremap kj <esc>
+
+" map nohlsearch
+nnoremap <leader><leader> :nohlsearch<CR>
+
+" map adding blank line.
+nnoremap <CR> m`o<Esc>``
+nnoremap <S-CR> m`O<Esc>``
 
 " split navigations
 nnoremap <C-J> <C-W><C-J>
@@ -125,6 +147,51 @@ nnoremap <F9> :w <CR> :sp <CR> :term python % <CR>
 " open nerd tree using <F5>
 map <silent> <F5> :NERDTreeToggle<CR>
 
+map :W <Nop>
+
+
+"=====================================================
+" quick-scope settings.
+"=====================================================
+" Trigger a highlight in the appropriate direction when pressing these keys:
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+
+highlight QuickScopePrimary guifg='#83a598' gui=underline ctermfg=155 cterm=underline
+highlight QuickScopeSecondary guifg='#8ec07c' gui=underline ctermfg=81 cterm=underline
+
+let g:qs_max_chars=150
+
+"=====================================================
+" fzf settings.
+"=====================================================
+" This is the default extra key bindings
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+map <silent> <C-f> :FZF<CR>
+map <silent> <leader>s :Lines<CR>
+
+" Border color
+let g:fzf_layout = {'up':'~90%', 'window': { 'width': 0.8, 'height': 0.8,'yoffset':0.5,'xoffset': 0.5, 'highlight': 'Todo', 'border': 'sharp', 'options': '--no-preview'} }
+
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
 "=====================================================
 " coc.nvim settings.
 "=====================================================
@@ -135,9 +202,6 @@ set hidden
 " Some servers have issues with backup files, see #649.
 set nobackup
 set nowritebackup
-
-" Give more space for displaying messages.
-"set cmdheight=2
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
