@@ -43,14 +43,15 @@ set splitright
 set splitbelow
 
 " scheme and airline settings
-colorscheme onedark
-let g:airline_theme='onedark'
+colorscheme gruvbox
+let g:airline_theme='gruvbox'
 let g:airline_detect_spell=0
 set noshowmode
 
 " encoding settings
 set encoding=utf-8
 set incsearch
+set nohls
 
 " spelling settings
 set spelllang=en_us
@@ -61,7 +62,15 @@ set guioptions-=T   " toolbar
 set guioptions-=r   " right scrollbar
 set guioptions-=L   " left scrollbar
 set guioptions-=m   " menu
-let g:onedark_hide_endofbuffer = 1
+
+" change left column highlighting
+set signcolumn=yes
+au VimEnter * :hi CursorLineNr guibg=237
+au VimEnter * :hi SignColumn guibg=237
+au VimEnter * :hi SignifySignDelete guibg=237 guifg=#fb4934
+au VimEnter * :hi SignifySignDeleteFirstLine guibg=237 guifg=#cc241d
+au VimEnter * :hi SignifySignChange guibg=237 guifg=#fe8019
+au VimEnter * :hi SignifySignAdd guibg=237 guifg=#b8bb26
 
 " left column settings
 set nu
@@ -100,9 +109,7 @@ syntax on
 "=====================================================
 inoremap jk <esc>
 inoremap kj <esc>
-
-" map nohlsearch
-nnoremap <leader><leader> :nohlsearch<CR>
+map <Space> <leader>
 
 " map adding blank line.
 nnoremap <CR> m`o<Esc>``
@@ -128,20 +135,11 @@ xnoremap <silent> J :move '<+1<CR>gv-gv
 nnoremap <silent> <C-TAB> :bnext<CR>
 nnoremap <silent> <S-TAB> :bprevious<CR>
 
-" TODO operations
-nnoremap <silent> \t /# TODO:<CR>
-nnoremap <silent> \T ?# TODO:<CR>
-nnoremap <silent> d\t :s/# TODO:/#<CR>
-
 " copy and paste to/from clipboard
 noremap <leader>y "*y
 noremap <leader>p "*p
+inoremap <leader>p <esc>"*pa
 nnoremap <silent> P A <esc>p
-
-" delete text from line
-nnoremap <silent> <space>d ^d$
-" rename the current word
-nmap <F2> <Plug>(coc-rename)
 
 " auto commenting setting
 nnoremap <silent> <C-/> :call NERDComment(0,"toggle")<CR>
