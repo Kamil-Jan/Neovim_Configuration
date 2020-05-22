@@ -13,16 +13,16 @@ call plug#begin('C:/.vim/plugged')
     Plug 'junegunn/gv.vim'
 " Themes
     Plug 'morhetz/gruvbox'
+    Plug 'joshdick/onedark.vim'
 " Status line
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
 " Other
     Plug 'preservim/nerdcommenter'                   " auto commenting
-    Plug 'nathanaelkane/vim-indent-guides'           " show indents
     Plug 'jiangmiao/auto-pairs'                      " auto pairs for '('
     Plug 'neoclide/coc.nvim', {'branch': 'release'}  " intelligence
     Plug 'tmhedberg/SimpylFold'                      " folding
-    Plug 'haya14busa/is.vim'                         " improves search feature
+    Plug 'justinmk/vim-sneak'                        " minimal motion plugin
     Plug 'unblevable/quick-scope'                    " fast searching in a line
 
 call plug#end()            " required
@@ -42,12 +42,15 @@ set scrolljump=5
 set splitright
 set splitbelow
 
-" scheme settings
-colorscheme gruvbox
-let g:airline_theme='gruvbox'
+" scheme and airline settings
+colorscheme onedark
+let g:airline_theme='onedark'
+let g:airline_detect_spell=0
+set noshowmode
 
 " encoding settings
 set encoding=utf-8
+set incsearch
 
 " spelling settings
 set spelllang=en_us
@@ -74,8 +77,6 @@ cd $HOME/Desktop
 
 " vim-run settings
 let g:run_cmd_python = ['python']
-" enable indent guides by default
-let g:indent_guides_enable_on_vim_startup = 1
 " close vim if only nerd tree is left
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " delete all trailing whitespaces on save
