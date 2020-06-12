@@ -1,4 +1,5 @@
 call plug#begin('C:/.vim/plugged')
+
 "=====================================================
 " Plugins
 "=====================================================
@@ -13,16 +14,12 @@ call plug#begin('C:/.vim/plugged')
     Plug 'junegunn/gv.vim'
 " Themes
     Plug 'morhetz/gruvbox'
-    Plug 'joshdick/onedark.vim'
-" Status line
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
+    Plug 'cormacrelf/vim-colors-github'
 " Other
     Plug 'preservim/nerdcommenter'                   " auto commenting
     Plug 'jiangmiao/auto-pairs'                      " auto pairs for '('
     Plug 'neoclide/coc.nvim', {'branch': 'release'}  " intelligence
     Plug 'tmhedberg/SimpylFold'                      " folding
-    Plug 'justinmk/vim-sneak'                        " minimal motion plugin
     Plug 'unblevable/quick-scope'                    " fast searching in a line
 
 call plug#end()            " required
@@ -44,9 +41,8 @@ set splitbelow
 
 " scheme and airline settings
 colorscheme gruvbox
-let g:airline_theme='gruvbox'
-let g:airline_detect_spell=0
-set noshowmode
+"colorscheme github
+set bg=dark
 
 " encoding settings
 set encoding=utf-8
@@ -76,9 +72,11 @@ au VimEnter * :hi SignifySignAdd guibg=237 guifg=#b8bb26
 set nu
 set ruler
 set relativenumber
+set cursorline
 
 " change font of AutoComplete menu
 au VimEnter * GuiPopupmenu 0
+au VimEnter * GuiTabline 0
 
 " cwd the same as current file directory
 set autochdir
@@ -132,8 +130,9 @@ xnoremap <silent> K :move '<-2<CR>gv-gv
 xnoremap <silent> J :move '<+1<CR>gv-gv
 
 " tab navigations
-nnoremap <silent> <C-TAB> :bnext<CR>
-nnoremap <silent> <S-TAB> :bprevious<CR>
+nnoremap <silent> <C-TAB> :tabnext<CR>
+nnoremap <silent> <S-TAB> :tabprev<CR>
+nnoremap <silent> <C-T> :tabnew<CR>
 
 " copy and paste to/from clipboard
 noremap <leader>y "*y
@@ -146,12 +145,27 @@ nnoremap <silent> <C-/> :call NERDComment(0,"toggle")<CR>
 vnoremap <silent> <C-/> :call NERDComment(0,"toggle")<CR>
 
 " run python code using <C-R>
-nnoremap <F9> :w <CR> :sp <CR> :term python % <CR>
+autocmd FileType python map <buffer> <F9> :w<CR>:sp<CR>:exec 'term python' shellescape(@%, 1)<CR>
+autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:sp<CR>:exec 'term python' shellescape(@%, 1)<CR>
 
 " open nerd tree using <F5>
 map <silent> <F5> :NERDTreeToggle<CR>
 
 map :W <Nop>
+"
+"=====================================================
+" statusline settings.
+"=====================================================
+set laststatus=2
+set statusline =%.20F
+set statusline +=\ %15{fugitive#statusline()}
+set statusline +=%=
+set statusline +=%-8.(%l,%c%V%)
+set statusline +=\ %-4L
+set statusline +=\ %-4P
+if g:colors_name == "github"
+    hi StatusLine guibg=white guifg=black
+endif
 
 "=====================================================
 " git settings.
@@ -177,6 +191,7 @@ nmap <leader>gK 9999<leader>gk
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
+" gruvbox
 highlight QuickScopePrimary guifg='#83a598' gui=underline ctermfg=155 cterm=underline
 highlight QuickScopeSecondary guifg='#8ec07c' gui=underline ctermfg=81 cterm=underline
 
@@ -191,7 +206,7 @@ let g:fzf_action = {
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
-map <silent> <C-f> :FZF<CR>
+map <silent> <C-f> :FZF ~\Desktop<CR>
 map <silent> <leader>s :Lines<CR>
 
 " Border color
@@ -335,7 +350,7 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " Add (Neo)Vim's native statusline support.
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
 " provide custom statusline: lightline.vim, vim-airline.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+"set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings using CoCList:
 " Show all diagnostics.
