@@ -1,3 +1,4 @@
 {
-  "python.jediPath": "c:/python/lib/site-packages"
+  "python.jediPath": "c:/python/lib/site-packages",
+  "clangd.path": "C:/Program Files/LLVM/bin/clangd.exe"
 }
