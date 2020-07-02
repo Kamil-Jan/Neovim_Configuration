@@ -103,6 +103,11 @@ let python_highlight_all=1
 syntax on
 
 "=====================================================
+" C++ settings
+"=====================================================
+set makeprg=g++\ -std=c++17\ -o\ %:r.exe\ %
+
+"=====================================================
 " User hot keys
 "=====================================================
 inoremap jk <esc>
@@ -140,6 +145,15 @@ noremap <leader>p "*p
 inoremap <leader>p <esc>"*pa
 nnoremap <silent> P A <esc>p
 
+" fast replacements
+nnoremap <leader>r :%s///g<Left><Left>
+nnoremap <leader>rc :%s///gc<Left><Left><Left>
+xnoremap <leader>r :%s///g<Left><Left>
+xnoremap <leader>rc :%s///gc<Left><Left><Left>
+
+nnoremap <silent> s* :let @/='\<'.expand('<cword>').'\>'<CR>cgn
+xnoremap <silent> s* "sy:let @/=@s<CR>cgn
+
 " auto commenting setting
 nnoremap <silent> <C-/> :call NERDComment(0,"toggle")<CR>
 vnoremap <silent> <C-/> :call NERDComment(0,"toggle")<CR>
@@ -147,6 +161,13 @@ vnoremap <silent> <C-/> :call NERDComment(0,"toggle")<CR>
 " run python code using <C-R>
 autocmd FileType python map <buffer> <F9> :w<CR>:sp<CR>:exec 'term python' shellescape(@%, 1)<CR>
 autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:sp<CR>:exec 'term python' shellescape(@%, 1)<CR>
+
+" compile C++ file using <F9>. Run using <F10>
+autocmd FileType cpp map <buffer> <F9> :w<CR>:make<CR>
+autocmd FileType cpp map <buffer> <F10> :sp<CR>:terminal %:r.exe<CR>
+
+" run .m file using <F9>
+autocmd FileType matlab map <buffer> <F9> :w<CR>:sp<CR>:exec 'term octave' shellescape(@%, 1)<CR>
 
 " open nerd tree using <F5>
 map <silent> <F5> :NERDTreeToggle<CR>
@@ -231,7 +252,7 @@ let g:fzf_colors =
 "=====================================================
 " coc.nvim settings.
 "=====================================================
-let g:python3_host_prog = 'C:\Python\python.exe'
+let g:python3_host_prog = 'C:\Users\kamil\AppData\Local\Programs\Python\Python38-32\python.exe'
 " TextEdit might fail if hidden is not set.
 set hidden
 
