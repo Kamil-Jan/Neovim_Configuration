@@ -1,8 +1,14 @@
+"_________________________________________
+"    ____      _ __        _
+"   /  _/___  (_) /__   __(_)___ ___
+"   / // __ \/ / __/ | / / / __ `__ \
+" _/ // / / / / /__| |/ / / / / / / /
+"/___/_/ /_/_/\__(_)___/_/_/ /_/ /_/
+"_________________________________________
+
+" Plugins
 call plug#begin('C:/.vim/plugged')
 
-"=====================================================
-" Plugins
-"=====================================================
 " File navigation
     Plug 'preservim/nerdtree'
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -14,20 +20,24 @@ call plug#begin('C:/.vim/plugged')
     Plug 'junegunn/gv.vim'
 " Themes
     Plug 'morhetz/gruvbox'
-    Plug 'cormacrelf/vim-colors-github'
+    Plug 'joshdick/onedark.vim'
+" Mark Down
+    Plug 'godlygeek/tabular'
+    Plug 'plasticboy/vim-markdown'
+" Latex
+    Plug 'lervag/vimtex'
 " Other
     Plug 'preservim/nerdcommenter'                   " auto commenting
     Plug 'jiangmiao/auto-pairs'                      " auto pairs for '('
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}  " intelligence
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}  " autocompleting
     Plug 'tmhedberg/SimpylFold'                      " folding
-    Plug 'unblevable/quick-scope'                    " fast searching in a line
+    Plug 'unblevable/quick-scope'                    " fast navigation in a line
+    Plug 'easymotion/vim-easymotion'                 " navigation within a file
 
 call plug#end()            " required
 filetype plugin indent on  " required
 
-"=====================================================
 " General settings
-"=====================================================
 " turn off visual effects
 set visualbell t_vd=
 set belloff=all
@@ -41,7 +51,6 @@ set splitbelow
 
 " scheme and airline settings
 colorscheme gruvbox
-"colorscheme github
 set bg=dark
 
 " encoding settings
@@ -52,6 +61,10 @@ set nohls
 " spelling settings
 set spelllang=en_us
 set spell
+
+" russian keymap
+set keymap=russian-jcukenwin
+set iminsert=0
 
 " hide panels
 set guioptions-=T   " toolbar
@@ -89,9 +102,11 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 " delete all trailing whitespaces on save
 autocmd BufWritePre * %s/\s\+$//e
 
-"=====================================================
+" saves folding in a file
+autocmd BufWinLeave *.* silent! mkview
+autocmd BufWinEnter *.* silent! loadview
+
 " Python settings
-"=====================================================
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -102,14 +117,10 @@ set autoindent
 let python_highlight_all=1
 syntax on
 
-"=====================================================
 " C++ settings
-"=====================================================
 set makeprg=g++\ -std=c++17\ -o\ %:r.exe\ %
 
-"=====================================================
-" User hot keys
-"=====================================================
+" Hot keys settings
 inoremap jk <esc>
 inoremap kj <esc>
 map <Space> <leader>
@@ -143,7 +154,6 @@ nnoremap <silent> <C-T> :tabnew<CR>
 noremap <leader>y "*y
 noremap <leader>p "*p
 inoremap <leader>p <esc>"*pa
-nnoremap <silent> P A <esc>p
 
 " fast replacements
 nnoremap <leader>r :%s///g<Left><Left>
@@ -158,6 +168,10 @@ xnoremap <silent> s* "sy:let @/=@s<CR>cgn
 nnoremap <silent> <C-/> :call NERDComment(0,"toggle")<CR>
 vnoremap <silent> <C-/> :call NERDComment(0,"toggle")<CR>
 
+" change keymap to Russian
+nnoremap <silent> <M-r> :set iminsert=1<CR>
+nnoremap <silent> <M-e> :set iminsert=0<CR>
+
 " run python code using <C-R>
 autocmd FileType python map <buffer> <F9> :w<CR>:sp<CR>:exec 'term python' shellescape(@%, 1)<CR>
 autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:sp<CR>:exec 'term python' shellescape(@%, 1)<CR>
@@ -169,14 +183,18 @@ autocmd FileType cpp map <buffer> <F10> :sp<CR>:terminal %:r.exe<CR>
 " run .m file using <F9>
 autocmd FileType matlab map <buffer> <F9> :w<CR>:sp<CR>:exec 'term octave' shellescape(@%, 1)<CR>
 
+" compile and open LaTex document
+autocmd FileType plaintex map <buffer> <F9> :w<CR>:sp<CR>:exec 'term pdflatex' shellescape(@%, 1)<CR>
+autocmd FileType plaintex map <buffer> <F10> :sp<CR>:terminal mupdf %:r.pdf<CR>:q<CR>
+autocmd FileType tex map <buffer> <F9> :w<CR>:sp<CR>:exec 'term pdflatex' shellescape(@%, 1)<CR>
+autocmd FileType tex map <buffer> <F10> :sp<CR>:terminal mupdf %:r.pdf<CR>:q<CR>
+
 " open nerd tree using <F5>
 map <silent> <F5> :NERDTreeToggle<CR>
 
 map :W <Nop>
-"
-"=====================================================
-" statusline settings.
-"=====================================================
+
+" Statusline settings.
 set laststatus=2
 set statusline =%.20F
 set statusline +=\ %15{fugitive#statusline()}
@@ -188,9 +206,7 @@ if g:colors_name == "github"
     hi StatusLine guibg=white guifg=black
 endif
 
-"=====================================================
-" git settings.
-"=====================================================
+" Git settings.
 let g:signify_sign_add               = '+'
 let g:signify_sign_delete            = '_'
 let g:signify_sign_delete_first_line = '‾'
@@ -206,9 +222,7 @@ nmap <leader>gk <plug>(signify-prev-hunk)
 nmap <leader>gJ 9999<leader>gJ
 nmap <leader>gK 9999<leader>gk
 
-"=====================================================
-" quick-scope settings.
-"=====================================================
+" Quick-scope settings.
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
@@ -218,9 +232,7 @@ highlight QuickScopeSecondary guifg='#8ec07c' gui=underline ctermfg=81 cterm=und
 
 let g:qs_max_chars=150
 
-"=====================================================
-" fzf settings.
-"=====================================================
+" Fzf settings.
 " This is the default extra key bindings
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
@@ -249,10 +261,12 @@ let g:fzf_colors =
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
 
-"=====================================================
-" coc.nvim settings.
-"=====================================================
-let g:python3_host_prog = 'C:\Users\kamil\AppData\Local\Programs\Python\Python38-32\python.exe'
+" LaTeX settings
+let g:vimtex_fold_enabled=1
+let g:vimtex_fold_manual=1
+
+" Coc.nvim settings.
+let g:python3_host_prog = 'C:\Users\kamil\anaconda3\python.exe'
 " TextEdit might fail if hidden is not set.
 set hidden
 
