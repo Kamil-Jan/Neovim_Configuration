@@ -26,10 +26,14 @@ call plug#begin('C:/.vim/plugged')
     Plug 'plasticboy/vim-markdown'
 " Latex
     Plug 'lervag/vimtex'
+    Plug 'vim-latex/vim-latex'
+" Snippets
+    Plug 'SirVer/ultisnips'
+    Plug 'honza/vim-snippets'
 " Other
     Plug 'preservim/nerdcommenter'                   " auto commenting
     Plug 'jiangmiao/auto-pairs'                      " auto pairs for '('
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}  " autocompleting
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}  " auto completing
     Plug 'tmhedberg/SimpylFold'                      " folding
     Plug 'unblevable/quick-scope'                    " fast navigation in a line
     Plug 'easymotion/vim-easymotion'                 " navigation within a file
@@ -50,7 +54,7 @@ set splitright
 set splitbelow
 
 " scheme and airline settings
-colorscheme gruvbox
+colorscheme onedark
 set bg=dark
 
 " encoding settings
@@ -59,7 +63,7 @@ set incsearch
 set nohls
 
 " spelling settings
-set spelllang=en_us
+set spelllang=en_us,ru
 set spell
 
 " russian keymap
@@ -88,8 +92,8 @@ set relativenumber
 set cursorline
 
 " change font of AutoComplete menu
-au VimEnter * GuiPopupmenu 0
-au VimEnter * GuiTabline 0
+"au VimEnter * GuiPopupmenu 0
+"au VimEnter * GuiTabline 0
 
 " cwd the same as current file directory
 set autochdir
@@ -129,6 +133,10 @@ map <Space> <leader>
 nnoremap <CR> m`o<Esc>``
 nnoremap <S-CR> m`O<Esc>``
 
+imap Nop <Plug>IMAP_JumpForward
+nmap Nop <Plug>IMAP_JumpForward
+vmap Nop <Plug>IMAP_JumpForward
+
 " split navigations
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
@@ -155,21 +163,20 @@ noremap <leader>y "*y
 noremap <leader>p "*p
 inoremap <leader>p <esc>"*pa
 
-" fast replacements
-nnoremap <leader>r :%s///g<Left><Left>
-nnoremap <leader>rc :%s///gc<Left><Left><Left>
-xnoremap <leader>r :%s///g<Left><Left>
-xnoremap <leader>rc :%s///gc<Left><Left><Left>
+" auto correcting in a line
+inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 
+" fast replacements
 nnoremap <silent> s* :let @/='\<'.expand('<cword>').'\>'<CR>cgn
 xnoremap <silent> s* "sy:let @/=@s<CR>cgn
 
 " auto commenting setting
-nnoremap <silent> <C-/> :call NERDComment(0,"toggle")<CR>
-vnoremap <silent> <C-/> :call NERDComment(0,"toggle")<CR>
+nnoremap <silent> <M-/> :call NERDComment(0,"toggle")<CR>
+vnoremap <silent> <M-/> :call NERDComment(0,"toggle")<CR>
 
 " change keymap to Russian
 nnoremap <silent> <M-r> :set iminsert=1<CR>
+" change keymap to English
 nnoremap <silent> <M-e> :set iminsert=0<CR>
 
 " run python code using <C-R>
@@ -190,7 +197,7 @@ autocmd FileType tex map <buffer> <F9> :w<CR>:sp<CR>:exec 'term pdflatex' shelle
 autocmd FileType tex map <buffer> <F10> :sp<CR>:terminal mupdf %:r.pdf<CR>:q<CR>
 
 " open nerd tree using <F5>
-map <silent> <F5> :NERDTreeToggle<CR>
+map <silent> <F6> :NERDTreeToggle<CR>
 
 map :W <Nop>
 
@@ -239,8 +246,8 @@ let g:fzf_action = {
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
-map <silent> <C-f> :FZF ~\Desktop<CR>
-map <silent> <leader>s :Lines<CR>
+nmap <silent> <C-f> :FZF ~\Desktop<CR>
+nmap <silent> <leader>s :Lines<CR>
 
 " Border color
 let g:fzf_layout = {'up':'~90%', 'window': { 'width': 0.8, 'height': 0.8,'yoffset':0.5,'xoffset': 0.5, 'highlight': 'Todo', 'border': 'sharp', 'options': '--no-preview'} }
@@ -263,7 +270,15 @@ let g:fzf_colors =
 
 " LaTeX settings
 let g:vimtex_fold_enabled=1
-let g:vimtex_fold_manual=1
+let g:tex_flavor='latex'
+let g:vimtex_view_method='mupdf'
+
+" Snippets settings
+let g:UltiSnipsExpandTrigger="<S-tab>"
+let g:UltiSnipsJumpForwardTrigger="<M-j>"
+let g:UltiSnipsJumpBackwardTrigger="<M-k>"
+let g:coc_snippet_next = '<M-j>'
+let g:coc_snippet_prev = '<M-k>'
 
 " Coc.nvim settings.
 let g:python3_host_prog = 'C:\Users\kamil\anaconda3\python.exe'
