@@ -281,7 +281,6 @@ let g:coc_snippet_prev = '<M-k>'
 
 " Coc.nvim settings.
 let g:python3_host_prog = '/usr/bin/python'
-" TextEdit might fail if hidden is not set.
 set hidden
 
 " Some servers have issues with backup files, see #649.
