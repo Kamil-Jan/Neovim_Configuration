@@ -84,6 +84,7 @@ au VimEnter * :hi SignifySignDelete guibg=237 guifg=#fb4934
 au VimEnter * :hi SignifySignDeleteFirstLine guibg=237 guifg=#cc241d
 au VimEnter * :hi SignifySignChange guibg=237 guifg=#fe8019
 au VimEnter * :hi SignifySignAdd guibg=237 guifg=#b8bb26
+au VimEnter * :hi Normal ctermbg=none
 
 " left column settings
 set nu
@@ -118,10 +119,12 @@ set expandtab
 set smartindent
 set autoindent
 let python_highlight_all=1
+autocmd FileType python set foldmethod=expr
 syntax on
 
 " C++ settings
-set makeprg=g++\ -std=c++17\ -o\ %:r.exe\ %
+autocmd FileType cpp set foldmethod=indent
+set makeprg=g++\ -std=c++17\ -Wall\ -o\ %:r.out\ %
 
 " Hot keys settings
 inoremap jk <esc>
@@ -153,14 +156,14 @@ xnoremap <silent> K :move '<-2<CR>gv-gv
 xnoremap <silent> J :move '<+1<CR>gv-gv
 
 " tab navigations
-nnoremap <silent> <C-TAB> :tabnext<CR>
-nnoremap <silent> <S-TAB> :tabprev<CR>
+nnoremap <silent> <leader><TAB> :bnext<CR>
+nnoremap <silent> <S-TAB> :bprev<CR>
 nnoremap <silent> <C-T> :tabnew<CR>
 
 " copy and paste to/from clipboard
-noremap <leader>y "*y
-noremap <leader>p "*p
-inoremap <leader>p <esc>"*pa
+noremap <leader>y "+y
+noremap <leader>p "+p
+inoremap <leader>p <esc>"+pa
 
 " auto correcting in a line
 inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
@@ -184,7 +187,7 @@ autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:sp<CR>:exec 'term python'
 
 " compile C++ file using <F9>. Run using <F10>
 autocmd FileType cpp map <buffer> <F9> :w<CR>:make<CR>
-autocmd FileType cpp map <buffer> <F10> :sp<CR>:terminal %:r.exe<CR>
+autocmd FileType cpp map <buffer> <F10> :sp<CR>:term ./%:r.out<CR>
 
 " run .m file using <F9>
 autocmd FileType matlab map <buffer> <F9> :w<CR>:sp<CR>:exec 'term octave' shellescape(@%, 1)<CR>
@@ -245,7 +248,7 @@ let g:fzf_action = {
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
 
-nmap <silent> <C-f> :FZF ~\Desktop<CR>
+nmap <silent> <C-f> :FZF<CR>
 nmap <silent> <leader>s :Lines<CR>
 
 " Border color
